@@ -62,6 +62,25 @@ print(min_tmp, min_tmp_mesto)
 # 4: Poišči mesto z največjim temperaturnim razponom (max - min) za prvi dan
 # Namig: Uporabi indeks [0] za prvi dan napovedi
 
+najvecji_razpon = 0
+najvecji_razpon_mesto = ""
+
+for k in koordinate[:3]:
+    lat = k["lat"]
+    lon = k["lon"]
+
+    url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&daily=temperature_2m_max,temperature_2m_min&timezone=Europe%2FLondon"
+
+    call = requests.get(url).json()
+
+    max_temps = call.get("daily", {}).get("temperature_2m_max", [])
+    min_temps = call.get("daily", {}).get("temperature_2m_min", [])
+    razpon = max_temps[0] - min_temps[0]
+    if razpon > najvecji_razpon:
+        najvecji_razpon = razpon
+        najvecji_razpon_mesto = k["ime"]
+print(najvecji_razpon, najvecji_razpon_mesto)
+
 # 5: Izpiši vsa mesta, kjer bo jutri padalo (precipitation_sum[1] > 0)
 # Namig: Jutri je na indeksu [1], danes je [0]
 
